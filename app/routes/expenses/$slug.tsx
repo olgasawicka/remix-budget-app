@@ -1,5 +1,5 @@
 // /expenses/<some-id>
 
 export default function ExpensesSlug() {
-  return <main>Expenses Slug Page</main>;
+  return <main>Expenses slug page</main>;
 }
