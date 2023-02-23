@@ -9,6 +9,7 @@ import {
 } from '@remix-run/react';
 
 import styles from './styles/tailwind.css';
+import Nav from './components/Nav';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -24,6 +25,9 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-stone-100">
+        <header className="pt-10">
+          <Nav />
+        </header>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
