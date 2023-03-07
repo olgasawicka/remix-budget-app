@@ -22,7 +22,7 @@ const Nav: FC = () => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/login" className="p-6">
+          <NavLink to="/authentication" className="p-6">
             Sign in
           </NavLink>
         </li>

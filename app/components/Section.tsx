@@ -1,4 +1,16 @@
-const Section = ({ children }: { children: React.ReactNode }) => {
-  return <section className="h-screen w-full pt-20 pb-20">{children}</section>;
+const Section = ({
+  children,
+  justifyProp = 'center',
+}: {
+  children: React.ReactNode;
+  justifyProp?: string;
+}) => {
+  return (
+    <section
+      className={`w-full px-10 py-6 pt-16 pb-16 flex justify-${justifyProp}`}
+    >
+      {children}
+    </section>
+  );
 };
 export default Section;

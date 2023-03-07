@@ -1,3 +1,5 @@
+import Section from '~/components/Section';
+
 export default function Index() {
-  return <main>Remix Budget</main>;
+  return <Section>Remix Budget</Section>;
 }
