@@ -7,6 +7,7 @@ interface FormFieldProps {
   placeholder?: string;
   icon?: any;
   withAutocomplete?: Boolean;
+  errorResponse?: string;
   onIconToggle?: (...args: any) => any;
   onChange?: (...args: any) => any;
 }
@@ -20,6 +21,7 @@ const FormField = ({
   placeholder,
   icon,
   withAutocomplete,
+  errorResponse,
   onIconToggle = () => {},
   onChange = () => {},
 }: FormFieldProps) => {
@@ -27,9 +29,12 @@ const FormField = ({
     <div className="w-full mb-5 relative">
       <label
         htmlFor={htmlFor}
-        className="text-xs font-semibold px-1 text-gray-900"
+        className="flex items-center justify-between pb-2 text-xs font-semibold px-1 text-gray-900"
       >
         {label}
+        {errorResponse && (
+          <span className="max-w-[80%] text-red-700">{errorResponse}</span>
+        )}
       </label>
       <input
         ref={innerRef}
@@ -43,12 +48,14 @@ const FormField = ({
         autoComplete={withAutocomplete ? 'on' : 'off'}
         required
       />
-      <span
-        className="inline-block absolute top-1/2 right-4 cursor-pointer"
-        onClick={onIconToggle}
-      >
-        {icon && icon}
-      </span>
+      {icon && (
+        <span
+          className="inline-block absolute top-1/2 right-4 cursor-pointer"
+          onClick={onIconToggle}
+        >
+          {icon}
+        </span>
+      )}
     </div>
   );
 };

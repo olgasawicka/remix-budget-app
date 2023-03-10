@@ -1,3 +1,4 @@
+import type { CustomError, ValidationErrors } from '~/utils/types';
 import React, { useEffect, useRef } from 'react';
 import { useState } from 'react';
 import {
@@ -19,28 +20,28 @@ const Authentication = () => {
     password: '',
   });
   const [inputType, setInputType] = useState('password');
+
   const [searchParams] = useSearchParams();
   const authMode = searchParams.get('mode') || 'login';
 
   const submitBtnCaption = authMode === 'login' ? 'Sign in' : 'Sign up';
   const toggleBtnCaption =
     authMode === 'login' ? 'Create a new user' : 'I have an account';
+
   const navigation = useNavigation();
   const isSubmitting = navigation.state !== 'idle';
 
-  const actionData = useActionData<typeof action>();
+  const actionData = useActionData<
+    typeof action | ValidationErrors | CustomError
+  >();
 
   const usernameRef = useRef<null | HTMLInputElement>(null);
   const emailRef = useRef<null | HTMLInputElement>(null);
   const passwordRef = useRef<null | HTMLInputElement>(null);
 
   useEffect(() => {
-    if (actionData?.errors?.username) {
-      usernameRef.current?.focus();
-    } else if (actionData?.errors?.email) {
-      emailRef.current?.focus();
-    } else if (actionData?.errors?.password) {
-      passwordRef.current?.focus();
+    if (actionData && actionData['statusCode'] === 422) {
+      setFormData({ username: formData.username, email: '', password: '' });
     }
   }, [actionData]);
 
@@ -79,14 +80,8 @@ const Authentication = () => {
               placeholder="John Smith"
               onChange={(event) => handleInputChange(event, 'username')}
               withAutocomplete
-              aria-invalid={actionData?.errors?.username ? true : undefined}
-              aria-describedby="username-error"
+              errorResponse={actionData && actionData['username']}
             />
-            {actionData?.errors?.username && (
-              <div className="pt-1 text-red-700">
-                {actionData.errors.username}
-              </div>
-            )}
           </>
         )}
         <FormField
@@ -97,12 +92,8 @@ const Authentication = () => {
           placeholder="johnsmith@example.com"
           onChange={(event) => handleInputChange(event, 'email')}
           withAutocomplete
-          aria-invalid={actionData?.errors?.email ? true : undefined}
-          aria-describedby="email-error"
+          errorResponse={actionData && actionData['email']}
         />
-        {actionData?.errors?.email && (
-          <div className="pt-1 text-red-700">{actionData.errors.email}</div>
-        )}
         <FormField
           innerRef={passwordRef}
           htmlFor="password"
@@ -116,11 +107,10 @@ const Authentication = () => {
             e.preventDefault();
             setInputType(inputType === 'password' ? 'text' : 'password');
           }}
-          aria-invalid={actionData?.errors?.password ? true : undefined}
-          aria-describedby="password-error"
+          errorResponse={actionData && actionData['password']}
         />
-        {actionData?.errors?.password && (
-          <div className="pt-1 text-red-700">{actionData.errors.password}</div>
+        {actionData && actionData['statusCode'] === 422 && (
+          <div className="text-red-700">{actionData['message']}</div>
         )}
         <button
           type="submit"
